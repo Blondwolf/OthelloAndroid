@@ -1,9 +1,11 @@
-package hearc.othello;
+package hearc.othello.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import hearc.othello.R;
 
 public class HomeActivity extends AppCompatActivity {
 
