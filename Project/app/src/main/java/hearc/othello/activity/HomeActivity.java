@@ -1,4 +1,4 @@
-package hearc.othello;
+package hearc.othello.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import hearc.othello.R;
+import hearc.othello.activity.GameActivity;
+import hearc.othello.activity.InstructionActivity;
+import hearc.othello.tools.AndroidTools;
 
 public class HomeActivity extends AppCompatActivity implements Button.OnClickListener{
 
@@ -37,11 +43,23 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
 
     @Override
     public void onClick(View v) {
+        Intent intent;
+
         switch (v.getId()){
+            case R.id.vsIA:
+                intent = new Intent(this, GameActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.vsLocal:
+                AndroidTools.Toast(this, "VS Local");
+                break;
+            case R.id.vsWifi:
+                AndroidTools.Toast(this, "VS Wifi");
+                break;
             case R.id.instruction:
-            Intent intent = new Intent(HomeActivity.this, InstructionActivity.class);
-            startActivity(intent);
-                
+                intent = new Intent(HomeActivity.this, InstructionActivity.class);
+                startActivity(intent);
+                break;
 
         }
 
