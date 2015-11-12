@@ -7,6 +7,7 @@
     tools:context="hearc.othello.activity.GameActivity">
 
     <TextView
+        android:id="@+id/score"
         android:text="N/A score N/A"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,14 +29,13 @@
         <include layout="@layout/row"/>
         <include layout="@layout/row"/>
         <include layout="@layout/row"/>
-        <include layout="@layout/row"/>
     </TableLayout>
 
     <TextView
-        android:text="Temps : 0"
+        android:id="@+id/time"
+        android:text="Time : 0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

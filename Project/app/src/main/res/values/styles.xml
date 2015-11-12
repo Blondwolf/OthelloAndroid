@@ -6,8 +6,8 @@
     </style>
 
     <style name="cell">
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
         <item name="android:background">@drawable/cell_shape</item>
         <item name="android:padding">5dp</item>
         <item name="android:onClick">onClick</item>

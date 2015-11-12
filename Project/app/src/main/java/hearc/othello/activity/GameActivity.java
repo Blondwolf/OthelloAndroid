@@ -1,6 +1,5 @@
 package hearc.othello.activity;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,46 +7,102 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import hearc.othello.R;
+import hearc.othello.model.AI.PlayerAI;
 import hearc.othello.model.GameBoard;
+import hearc.othello.model.Move;
+import hearc.othello.model.Player;
+import hearc.othello.model.PlayerHuman;
+import hearc.othello.tools.AndroidTools;
 
 public class GameActivity extends AppCompatActivity implements Button.OnClickListener {
-
-    private boolean player1Turn = true;
+    /*      Graphical elements      */
     private TableLayout tableLayout;
+    private TextView textTime;
+    private TextView textScore;
+
+    /*      Static text elements    */
+    private static final String timeText = "Time : ";
+    private static final String scoreText = " score ";
+
+    /*      Logical elements        */
     private GameBoard gameboard;
+    private Player p1;
+    private Player p2;
+    private Player actualPlayer;
+    private Player enemyPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_game);
 
+        //Getting graphical elements
         tableLayout = (TableLayout) findViewById(R.id.graphic_gameboard);
+        textTime = (TextView) findViewById(R.id.time);
+        textScore = (TextView) findViewById(R.id.score);
 
+        //TODO : Recuperation des joueur par intent
+        //peut etre passer les joueurs dans le game (gameboard)
+        actualPlayer = p1 = new PlayerHuman(0, gameboard, "Test player1");
+        enemyPlayer = p2 = new PlayerHuman(1, gameboard, "Test player2");
+
+        //Initiate the game
         gameboard = new GameBoard();
-        updateGraphicGameBoard();
+        updateGraphicalBoard();
+        //TODO : launch thread for time
     }
 
     @Override
     public void onClick(View v) {
+        //Get move from cell
         ImageView cell = (ImageView) v;
+        Move nextMove = getMoveFromCase(cell);
 
-        //TODO : Checker si la cellule est deja pleine
+        //Check if move is possible
+        if(gameboard.isMovePossible(nextMove.getX(), nextMove.getY(), actualPlayer.getID())) {
+            AndroidTools.Toast(getApplicationContext(), actualPlayer.toString());
 
-        //Changement d'image, a optimiser
-        if(player1Turn){
-            cell.setImageResource(R.drawable.circle_red);
+            //Play move
+            gameboard.addCoin(nextMove, actualPlayer.getID());
+
+            //Check if IA for automatical move
+            if(enemyPlayer instanceof PlayerAI){
+                //Automatical play from IA
+                Move nextEnemyMove = enemyPlayer.nextPlay();
+                gameboard.addCoin(nextEnemyMove, enemyPlayer.getID());
+            }
+            //Else is HumanPlayer
+            else{
+                //Changing player turn
+                Player tempPlayer = actualPlayer;
+                actualPlayer = enemyPlayer;
+                enemyPlayer = tempPlayer;
+            }
+
+            //Update graphic and score
+            updateGraphic();
         }
         else{
-            cell.setImageResource(R.drawable.circle_blue);
+            AndroidTools.Toast(getApplicationContext(), "Move : "+nextMove.toString()+" is not possible !");
         }
-
-        player1Turn = !player1Turn;
     }
 
-    private void addGraphicalCoin(){
+    private Move getMoveFromCase(ImageView view){
+        Move move = null;
 
+        for (int i=0; i<tableLayout.getChildCount();i++){
+            TableRow rowView = (TableRow) tableLayout.getChildAt(i);
+            for(int j=0; j<rowView.getChildCount();j++){
+                if(view.equals(rowView.getChildAt(j))){//verifier la comparaison
+                    move = new Move(i, j);
+                }
+            }
+        }
+
+        return move;
     }
 
     private ImageView getCaseView(int row, int col){
@@ -62,16 +117,13 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         return imgView;
     }
 
-    private void updateLogicalGameBoard(){
-
+    private void updateGraphic(){
+        updateGraphicalBoard();
+        updateScore();
     }
 
-    private void updateGraphicGameBoard(){
+    private void updateGraphicalBoard(){
         ImageView imgView;
-
-        for (int i=0; i<tableLayout.getChildCount();i++){
-
-        }
 
         for (int i = 0; i < GameBoard.BOARD_SIZE; i++) {
             for (int j = 0; j < GameBoard.BOARD_SIZE; j++) {
@@ -88,5 +140,11 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
                 }
             }
         }
+    }
+
+    private void updateScore(){
+        int scoreP1 = gameboard.getCoinCount(p1.getID());
+        int scoreP2 = gameboard.getCoinCount(p2.getID());
+        textScore.setText(scoreP1+scoreText+scoreP2);
     }
 }

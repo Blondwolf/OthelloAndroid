@@ -1,17 +1,37 @@
 package hearc.othello.model ;
 
 // ****************************************************
-//  Classe pour l'�change des coups entre les joueurs.
-//  ATTENTION : NE PAS MODIFIER CETTE CLASSE
+//  Simplification des coups (i,j)
 // ****************************************************
 
 public class Move
 {
-	// Attributs de la classe ;
-	public int i,j ;
+	//Attributs de la classe
+	private int x;
+	private int y ;
 	
-	// Constructeurs de la Classe ;
-	public Move () {}
-	public Move (int i, int j)
-	{ this.i = i ; this.j = j ; }
+	//Constructeurs de la Classe
+	public Move(){};
+
+	public Move (int x, int y){
+		setMove(x, y);
+	}
+
+	public int getX(){
+		return x;
+	}
+
+	public int getY(){
+		return y;
+	}
+
+	public void setMove(int x, int y){
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public String toString() {
+		return "("+x+","+y+")";
+	}
 }

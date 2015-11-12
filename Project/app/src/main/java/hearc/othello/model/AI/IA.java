@@ -6,7 +6,10 @@
  *  Participants.ChabbouFernandes.GameBoard
  *  Participants.ChabbouFernandes.Node
  */
-package hearc.othello.model;
+package hearc.othello.model.AI;
+
+import hearc.othello.model.GameBoard;
+import hearc.othello.model.Move;
 
 public class IA {
     private static int MAX = Integer.MAX_VALUE;
@@ -48,7 +51,7 @@ public class IA {
         //On parcourt l'eventail des coups possibles
         for (Move move : gameBoard.getPossibleMoves(actualPlayer)) {
             //Simulation du coup suivant
-            GameBoard gameBoardNextMove = gameBoard.clone();
+            GameBoard gameBoardNextMove = gameBoard.cloneOf();
             gameBoardNextMove.addCoin(move, actualPlayer);
 
             Node nodeChildren = new Node(move);

@@ -62,7 +62,5 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
 
         }
-
-
     }
 }
