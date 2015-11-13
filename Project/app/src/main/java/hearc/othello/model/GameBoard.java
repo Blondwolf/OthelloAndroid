@@ -245,17 +245,14 @@ public class GameBoard {
 	 * @param dColumn
 	 * @param ennemyFound
 	 */
-	private void testDirection(int line, int column, int currentID, int dLine,
-			int dColumn, boolean ennemyFound) {
+	private void testDirection(int line, int column, int currentID, int dLine, int dColumn, boolean ennemyFound) {
 		tempReverseList.clear();
 
 		// Adding eventual reverses to tempReverseList
-		boolean moveTest = reverseDirection(line, column, currentID, dLine,
-				dColumn, ennemyFound);
+		boolean moveTest = reverseDirection(line, column, currentID, dLine,	dColumn, ennemyFound);
 
 		// If the tempReverses have to be done
 		if (moveTest) {
-
 			// Add the tempReverses to the reverseList
 			reverseList.addAll(tempReverseList);
 		}
@@ -274,8 +271,7 @@ public class GameBoard {
 	 */
 	private boolean reverseDirection(int line, int column, int currentID, int dLine, int dColumn, boolean enemyFound) {
 		// Check if next square is out of board
-		if (line + dLine >= BOARD_SIZE || column + dColumn >= BOARD_SIZE
-				|| line + dLine < 0 || column + dColumn < 0) {
+		if (line + dLine >= BOARD_SIZE || column + dColumn >= BOARD_SIZE || line + dLine < 0 || column + dColumn < 0) {
 			return false;
 		}
 
