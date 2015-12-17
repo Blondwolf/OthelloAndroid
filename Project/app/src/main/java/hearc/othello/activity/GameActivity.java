@@ -62,7 +62,7 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         Move nextMove = getMoveFromCase(cell);
 
         //Check if move is possible
-        if(gameboard.isMovePossible(nextMove.getX(), nextMove.getY(), actualPlayer.getID())) {
+        if(gameboard.isMovePossible(nextMove.getI(), nextMove.getJ(), actualPlayer.getID())) {
             AndroidTools.Toast(getApplicationContext(), actualPlayer.toString());
 
             //Play move
@@ -93,10 +93,10 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
     private Move getMoveFromCase(ImageView view){
         Move move = null;
 
-        for (int i=0; i<tableLayout.getChildCount();i++){
-            TableRow rowView = (TableRow) tableLayout.getChildAt(i);
-            for(int j=0; j<rowView.getChildCount();j++){
-                if(view.equals(rowView.getChildAt(j))){//verifier la comparaison
+        for (int j=0; j<tableLayout.getChildCount();j++){
+            TableRow rowView = (TableRow) tableLayout.getChildAt(j);
+            for(int i=0; i<rowView.getChildCount();i++){
+                if(view.equals(rowView.getChildAt(i))){//verifier la comparaison
                     move = new Move(i, j);
                 }
             }

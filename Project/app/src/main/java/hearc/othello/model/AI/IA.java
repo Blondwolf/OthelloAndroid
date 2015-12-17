@@ -51,7 +51,7 @@ public class IA {
         //On parcourt l'eventail des coups possibles
         for (Move move : gameBoard.getPossibleMoves(actualPlayer)) {
             //Simulation du coup suivant
-            GameBoard gameBoardNextMove = gameBoard.cloneOf();
+            GameBoard gameBoardNextMove = gameBoard.clone();
             gameBoardNextMove.addCoin(move, actualPlayer);
 
             Node nodeChildren = new Node(move);
