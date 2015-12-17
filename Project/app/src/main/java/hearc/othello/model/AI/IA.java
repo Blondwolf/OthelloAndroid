@@ -1,11 +1,3 @@
-/*
- * Decompiled with CFR 0_102.
- * 
- * Could not load the following classes:
- *  Othello.Move
- *  Participants.ChabbouFernandes.GameBoard
- *  Participants.ChabbouFernandes.Node
- */
 package hearc.othello.model.AI;
 
 import hearc.othello.model.GameBoard;

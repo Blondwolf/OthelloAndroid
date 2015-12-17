@@ -1,7 +1,9 @@
-package hearc.othello.activity;
+package hearc.othello.view.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,17 +46,25 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         textTime = (TextView) findViewById(R.id.time);
         textScore = (TextView) findViewById(R.id.score);
 
-        //TODO : Recuperation des joueur par intent
-        //peut etre passer les joueurs dans le game (gameboard)
-        actualPlayer = p1 = new PlayerHuman(0, gameboard, "Test player1");
-        enemyPlayer = p2 = new PlayerHuman(1, gameboard, "Test player2");
-
         //Initiate the game
+        String nameP1 = getIntent().getStringExtra("NameP1");
+        String nameP2 = getIntent().getStringExtra("NameP2");
+        actualPlayer = p1 = new PlayerHuman(0, gameboard, nameP1);
+        enemyPlayer = p2 = new PlayerHuman(1, gameboard, nameP2);
+
         gameboard = new GameBoard();
-        updateGraphicalBoard();
+        updateGraphic();
+
         //TODO : launch thread for time
+        /*CustomTimerTask myTask = new CustomTimerTask();
+        Timer myTimer = new Timer();
+        myTimer.schedule(myTask, 3000, 1500);*/
     }
 
+    /***
+     * OnClick for the gameBoard's cells
+     * @param v : View from the cell where the player want to add a piece
+     */
     @Override
     public void onClick(View v) {
         //Get move from cell
@@ -90,6 +100,11 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         }
     }
 
+    /***
+     * Get move with coords relative to the view supplied
+     * @param view : is a ImageView (cell) in a rowView in a TableLayout
+     * @return move coordinates
+     */
     private Move getMoveFromCase(ImageView view){
         Move move = null;
 
@@ -105,6 +120,12 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         return move;
     }
 
+    /***
+     * Get the ImageView (cell) from the given coordinates
+     * @param row
+     * @param col
+     * @return
+     */
     private ImageView getCaseView(int row, int col){
         ImageView imgView;
 
@@ -145,6 +166,10 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
     private void updateScore(){
         int scoreP1 = gameboard.getCoinCount(p1.getID());
         int scoreP2 = gameboard.getCoinCount(p2.getID());
-        textScore.setText(scoreP1+scoreText+scoreP2);
+
+        String text = "<b>"+p1.getName() + "</b> " + scoreP1 + scoreText + scoreP2 + " <b>" + p2.getName() + "</b>";
+        Spanned htmlText = Html.fromHtml(text);
+
+        textScore.setText(htmlText);
     }
 }

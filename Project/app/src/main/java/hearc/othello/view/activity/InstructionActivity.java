@@ -1,4 +1,4 @@
-package hearc.othello.activity;
+package hearc.othello.view.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

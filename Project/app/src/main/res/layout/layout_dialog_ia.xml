@@ -18,7 +18,7 @@
             <Button
                 android:layout_width="190dp"
                 android:layout_height="107dp"
-                android:text="New "
+                android:text=""
                 android:id="@+id/newGame"
                 android:layout_gravity="center_vertical" />
 

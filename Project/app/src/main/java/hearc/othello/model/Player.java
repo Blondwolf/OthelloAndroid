@@ -10,7 +10,7 @@ public abstract class Player
 	protected int id;
 	protected GameBoard gameBoard;
 	protected String namePlayer;
-	
+
 	public Player(int id, GameBoard gameBoard, String namePlayer)
 	{
 		this.id = id;
@@ -21,6 +21,10 @@ public abstract class Player
 		return id;
 	}
 
+	public String getName() {
+		return namePlayer;
+	}
+
 	@Override
 	public String toString() {
 		return "("+id+","+namePlayer+")";
@@ -28,4 +32,3 @@ public abstract class Player
 
 	public abstract Move nextPlay();
 }
-		
