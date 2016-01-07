@@ -20,6 +20,11 @@ import hearc.othello.view.dialog.NewOrLoadDialog;
 public class HomeActivity extends AppCompatActivity implements Button.OnClickListener, DialogListener{
 
     /*         Creation        */
+    /*private Mode mode;
+    public enum Mode{
+        VS, IA, WIFI
+    }*/
+    private int mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +56,17 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
     @Override
     public void onClick(View v) {
         Intent intent;
+        Dialog dialog;
 
-        switch (v.getId()){
-            case R.id.vsIA:
-                Dialog dialog = new NewOrLoadDialog(this, this);
+        mode = v.getId();
+        switch (mode){
+            case R.id.vsLocal:
+                dialog = new NewOrLoadDialog(this, this);
                 dialog.show();
                 break;
-            case R.id.vsLocal:
-                AndroidTools.Toast(HomeActivity.this, "VS Local");
+            case R.id.vsIA:
+                dialog = new NewOrLoadDialog(this, this);
+                dialog.show();
                 break;
             case R.id.vsWifi:
                 AndroidTools.Toast(this, "Partie en Wifi");
@@ -79,9 +87,17 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
                 int buttonId = result.getInt("newOrLoad");
                 switch (buttonId){
                     case R.id.newGame:
-                        //TODO : Get back bundle info to know wich gameMode load
-                        Dialog dialog = new LocalDialog(this, this);
-                        dialog.show();
+                        switch (mode){
+                            case R.id.vsLocal:
+                                Dialog dialog = new LocalDialog(this, this);
+                                dialog.show();
+                                break;
+                            case R.id.vsIA:
+                                //Dialog dialog = new IADialog(this);
+                                launchIAGame();
+                                break;
+                        }
+
                         break;
                     case R.id.loadGame:
                         //TODO : Load preferences
@@ -101,20 +117,20 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     /*         Privates Functions       */
-    private void launchGameActivity(String namePlayer1, String namePlayer2, String type){
+    private void launchGameActivity(String namePlayer1, String namePlayer2, int mode){
         Intent intent;
         intent = new Intent(HomeActivity.this, GameActivity.class);
-        intent.putExtra("Type", type);//TODO : dans strings
+        intent.putExtra("Type", mode);//TODO : dans strings
         intent.putExtra("NameP1", namePlayer1);
         intent.putExtra("NameP2", namePlayer2);
         startActivity(intent);
     }
 
     public void launchIAGame(){
-        launchGameActivity("Player", "IA", "IA");
+        launchGameActivity("Player", "IA", R.id.vsIA);
     }
 
     public void launchLocalGame(String namePlayer1, String namePlayer2){
-        launchGameActivity(namePlayer1, namePlayer2, "Locale");
+        launchGameActivity(namePlayer1, namePlayer2, R.id.vsLocal);
     }
 }

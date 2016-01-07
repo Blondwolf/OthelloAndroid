@@ -29,7 +29,7 @@ public class PlayerAI extends Player {
 	 */
 	public Move nextPlay(){
 		//Get the best move (null if no move possible)
-		Move bestMove = IA.getBestMove(gameBoard, depth, id);
+		Move bestMove = IA.getBestMove(gameBoard.clone(), depth, id);
 		return bestMove;
 	}
 

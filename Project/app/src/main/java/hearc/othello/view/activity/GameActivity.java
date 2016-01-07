@@ -47,10 +47,14 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         textScore = (TextView) findViewById(R.id.score);
 
         //Initiate the game
+        int mode = getIntent().getIntExtra("Type", -1);
         String nameP1 = getIntent().getStringExtra("NameP1");
         String nameP2 = getIntent().getStringExtra("NameP2");
         actualPlayer = p1 = new PlayerHuman(0, gameboard, nameP1);
-        enemyPlayer = p2 = new PlayerHuman(1, gameboard, nameP2);
+        if(mode == R.id.vsIA)
+            enemyPlayer = p2 = new PlayerAI(1, gameboard, 3);
+        else
+            enemyPlayer = p2 = new PlayerHuman(1, gameboard, nameP2);
 
         gameboard = new GameBoard();
         updateGraphic();
@@ -72,14 +76,17 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         Move nextMove = getMoveFromCase(cell);
 
         //Check if move is possible
-        if(gameboard.isMovePossible(nextMove.getI(), nextMove.getJ(), actualPlayer.getID())) {
+        if(gameboard.isMovePossible(nextMove.getLine(), nextMove.getColumn(), actualPlayer.getID())) {
             AndroidTools.Toast(getApplicationContext(), actualPlayer.toString());
 
             //Play move
             gameboard.addCoin(nextMove, actualPlayer.getID());
 
             //Check if IA for automatical move
-            if(enemyPlayer instanceof PlayerAI){
+            if(enemyPlayer instanceof PlayerAI){//Check mode instead
+                updateGraphic();
+                //TODO : Little timer to simulate IA thinking
+
                 //Automatical play from IA
                 Move nextEnemyMove = enemyPlayer.nextPlay();
                 gameboard.addCoin(nextEnemyMove, enemyPlayer.getID());
@@ -112,7 +119,7 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
             TableRow rowView = (TableRow) tableLayout.getChildAt(j);
             for(int i=0; i<rowView.getChildCount();i++){
                 if(view.equals(rowView.getChildAt(i))){//verifier la comparaison
-                    move = new Move(i, j);
+                    move = new Move(j, i);
                 }
             }
         }
