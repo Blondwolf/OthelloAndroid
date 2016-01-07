@@ -15,21 +15,19 @@ public class PlayerAI extends Player {
 	private static final String NAME_IA = "IA";
 	private int depth;
 
-	public PlayerAI(int id, GameBoard gameBoard, int level) {
-		super(id, gameBoard, NAME_IA);
+	public PlayerAI(int id, int level) {
+		super(id, NAME_IA);
 
 		this.id = id;
 		this.depth = level;
-
-		this.gameBoard = new GameBoard();
 	}
 
 	/**
 	 * Method called when the IA has to play
 	 */
-	public Move nextPlay(){
+	public Move nextPlay(GameBoard gameBoard){
 		//Get the best move (null if no move possible)
-		Move bestMove = IA.getBestMove(gameBoard.clone(), depth, id);
+		Move bestMove = IA.getBestMove(gameBoard, depth, id);
 		return bestMove;
 	}
 

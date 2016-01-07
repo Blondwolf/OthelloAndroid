@@ -6,12 +6,12 @@ package hearc.othello.model;
 public class PlayerHuman extends Player{
 
 
-    public PlayerHuman(int playerID, GameBoard gameBoard, String namePlayer) {
-        super(playerID, gameBoard, namePlayer);
+    public PlayerHuman(int playerID, String namePlayer) {
+        super(playerID, namePlayer);
     }
 
     @Override
-    public Move nextPlay() {
+    public Move nextPlay(GameBoard gameBoard) {
         return null;
     }
 }

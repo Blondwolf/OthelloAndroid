@@ -1,5 +1,7 @@
 package hearc.othello.model.AI;
 
+import java.util.Iterator;
+
 import hearc.othello.model.GameBoard;
 import hearc.othello.model.Move;
 
@@ -18,8 +20,9 @@ public class IA {
                 {250, -50, 5, 2, 2, 5, -50, 250}};
     }
 
-    /*	Entree du programme d'IA */
+    //Entree du programme d'IA
     public static Move getBestMove(GameBoard gameBoard, int depth, int playerID) {
+        //playerID -= 1;//Begin with player
         Node nodeRoot = new Node(null);
         Node nodeBestChild = null;
 
@@ -49,12 +52,12 @@ public class IA {
             Node nodeChildren = new Node(move);
             node.addChildNode(nodeChildren);
 
-            //On cr�e les fils
+            //On cree les fils
             searchBestNode(gameBoardNextMove, playerID, nodeChildren, actualDepth-1, 1-actualPlayer, -minMax);
 
             //On cherche le meilleur fils
             if (nodeChildren.getEvaluation() * minMax > node.getEvaluation() * minMax){
-//            	System.out.println(nodeChildren.getEvaluation() * minMax+" > "+node.getEvaluation() * minMax);
+            	//System.out.println(nodeChildren.getEvaluation() * minMax+" > "+node.getEvaluation() * minMax);
                 node.setEvaluation(nodeChildren.getEvaluation());
                 nodeBestChild = nodeChildren;
 
@@ -65,25 +68,25 @@ public class IA {
             }
         }
 
-//    	System.out.println("Actual best level "+actualDepth+" is :"+nodeBestChild.getEvaluation()+" for :"+minMax);
+    	//System.out.println("Actual best level "+actualDepth+" is :"+nodeBestChild.getEvaluation()+" for :"+minMax);
         return nodeBestChild;//On renvoit le meilleur coup
     }
 
     public static int evaluate(GameBoard game, int playerID) {
-        int nbrPieces = 0; 	//nombre de pi�ces
+        int nbrPieces = 0; 	//nombre de pieces
         int nbrMove = 0; 	//nombre de mouvement possible
-        int value = 0; 		//valeur des pi�ces selon leur value
+        int value = 0; 		//valeur des pieces selon leur value
 
         nbrPieces = game.getCoinCount(playerID);
         nbrMove = game.getPossibleMoves(playerID).size();
         value = calculStrategicalBoardScore(game, playerID, matrix);
 
-        //Si c'est le d�but de la partie, on essaye de ne pas prendre trop de pi�ces afin de privil�gier la mobilit�
+        //Si c'est le debut de la partie, on essaye de ne pas prendre trop de pieces afin de privilegier la mobilite
         if (game.getCoinCount(playerID) + game.getCoinCount(1-playerID) < 32)
         {
             return 3 * nbrMove + value;
         }
-        else//Si plus de la moiti� du plateau est rempli, on change de strat�gie pour le nombre de pi�ces
+        else//Si plus de la moitie du plateau est rempli, on change de strategie pour le nombre de pieces
         {
             return 3 * nbrPieces + 2 * nbrMove + 5 * value;
         }
@@ -92,10 +95,10 @@ public class IA {
     private static int calculStrategicalBoardScore(GameBoard game, int playerID, int[][] grilleEval) {
         int score = 0;
 
-        for (int i = 0; i < GameBoard.BOARD_SIZE; i++) {
-            for (int j = 0; j < GameBoard.BOARD_SIZE; j++) {
-                if (playerID == game.getPlayerIDAtPos(i, j)) {
-                    score += grilleEval[i][j];
+        for (int line = 0; line < GameBoard.BOARD_SIZE; line++) {
+            for (int column = 0; column < GameBoard.BOARD_SIZE; column++) {
+                if (playerID == game.getPlayerIDAtPos(line, column)) {
+                    score += grilleEval[line][column];
                 }
             }
         }

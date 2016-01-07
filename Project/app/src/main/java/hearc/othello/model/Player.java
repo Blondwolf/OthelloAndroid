@@ -11,7 +11,7 @@ public abstract class Player
 	protected GameBoard gameBoard;
 	protected String namePlayer;
 
-	public Player(int id, GameBoard gameBoard, String namePlayer)
+	public Player(int id, String namePlayer)
 	{
 		this.id = id;
 		this.namePlayer = namePlayer;
@@ -30,5 +30,5 @@ public abstract class Player
 		return "("+id+","+namePlayer+")";
 	}
 
-	public abstract Move nextPlay();
+	public abstract Move nextPlay(GameBoard gameBoard);
 }

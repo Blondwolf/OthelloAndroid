@@ -50,11 +50,11 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         int mode = getIntent().getIntExtra("Type", -1);
         String nameP1 = getIntent().getStringExtra("NameP1");
         String nameP2 = getIntent().getStringExtra("NameP2");
-        actualPlayer = p1 = new PlayerHuman(0, gameboard, nameP1);
+        actualPlayer = p1 = new PlayerHuman(0, nameP1);
         if(mode == R.id.vsIA)
-            enemyPlayer = p2 = new PlayerAI(1, gameboard, 3);
+            enemyPlayer = p2 = new PlayerAI(1, 2);
         else
-            enemyPlayer = p2 = new PlayerHuman(1, gameboard, nameP2);
+            enemyPlayer = p2 = new PlayerHuman(1, nameP2);
 
         gameboard = new GameBoard();
         updateGraphic();
@@ -88,7 +88,7 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
                 //TODO : Little timer to simulate IA thinking
 
                 //Automatical play from IA
-                Move nextEnemyMove = enemyPlayer.nextPlay();
+                Move nextEnemyMove = enemyPlayer.nextPlay(gameboard);
                 gameboard.addCoin(nextEnemyMove, enemyPlayer.getID());
             }
             //Else is HumanPlayer

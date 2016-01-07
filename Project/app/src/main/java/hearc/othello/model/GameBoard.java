@@ -14,19 +14,8 @@ public class GameBoard {
 	public static final int NO_COIN = -1;
 	public static final int BOARD_SIZE = 8;
 
-	/***
-	 * Contains game state
-	 */
 	private int[][] gameBoard;
-
-	/***
-	 * List of coins to reverse
-	 */
 	private ArrayList<Move> reverseList;
-
-	/***
-	 * List of coins which are eventually going to be reversed
-	 */
 	private ArrayList<Move> tempReverseList;
 
 	public GameBoard() {
@@ -34,7 +23,6 @@ public class GameBoard {
 		tempReverseList = new ArrayList<>();
 
 		this.gameBoard = new int[BOARD_SIZE][BOARD_SIZE];
-
 		for (int line = 0; line < BOARD_SIZE; line++) {
 			for (int column = 0; column < BOARD_SIZE; column++) {
 				gameBoard[line][column] = -1;
@@ -46,7 +34,6 @@ public class GameBoard {
 		gameBoard[3][4] = RED_COIN;
 		gameBoard[4][3] = RED_COIN;
 		gameBoard[4][4] = BLUE_COIN;
-
 	}
 
 	/***
@@ -60,7 +47,6 @@ public class GameBoard {
 			}
 		}
 		return newBoard;
-
 	}
 
 	/***
@@ -259,17 +245,14 @@ public class GameBoard {
 	 * @param dColumn
 	 * @param ennemyFound
 	 */
-	private void testDirection(int line, int column, int currentID, int dLine,
-							   int dColumn, boolean ennemyFound) {
+	private void testDirection(int line, int column, int currentID, int dLine, int dColumn, boolean ennemyFound) {
 		tempReverseList.clear();
 
 		// Adding eventual reverses to tempReverseList
-		boolean moveTest = reverseDirection(line, column, currentID, dLine,
-				dColumn, ennemyFound);
+		boolean moveTest = reverseDirection(line, column, currentID, dLine, dColumn, ennemyFound);
 
 		// If the tempReverses have to be done
 		if (moveTest) {
-
 			// Add the tempReverses to the reverseList
 			reverseList.addAll(tempReverseList);
 		}
@@ -283,11 +266,10 @@ public class GameBoard {
 	 * @param currentID
 	 * @param dLine
 	 * @param dColumn
-	 * @param ennemyFound
+	 * @param enemyFound
 	 * @return
 	 */
-	private boolean reverseDirection(int line, int column, int currentID,
-									 int dLine, int dColumn, boolean ennemyFound) {
+	private boolean reverseDirection(int line, int column, int currentID, int dLine, int dColumn, boolean enemyFound) {
 		// Check if next square is out of board
 		if (line + dLine >= BOARD_SIZE || column + dColumn >= BOARD_SIZE
 				|| line + dLine < 0 || column + dColumn < 0) {
@@ -298,7 +280,7 @@ public class GameBoard {
 		int idPlayerAtPos = getPlayerIDAtPos(line + dLine, column + dColumn);
 
 		// Not player --> return false
-		if (idPlayerAtPos == -1) {
+		if (idPlayerAtPos == NO_COIN) {
 			return false;
 		}
 
@@ -308,7 +290,7 @@ public class GameBoard {
 			tempReverseList.add(new Move(line + dLine, column + dColumn));
 			return reverseDirection(line + dLine, column + dColumn, currentID,
 					dLine, dColumn, true);
-		} else if (ennemyFound) {
+		} else if (enemyFound) {
 			return true;
 		}
 		return false;
@@ -324,7 +306,7 @@ public class GameBoard {
 	 */
 	public boolean isMovePossible(int line, int column, int playerID) {
 
-		if (gameBoard[line][column] != -1) {
+		if (gameBoard[line][column] != NO_COIN) {
 			return false;
 		}
 
@@ -353,11 +335,9 @@ public class GameBoard {
 	 * @param ennemyFound
 	 * @return
 	 */
-	private boolean checkDirection(int line, int column, int playerID,
-								   int dLine, int dColumn, boolean ennemyFound) {
+	private boolean checkDirection(int line, int column, int playerID, int dLine, int dColumn, boolean ennemyFound) {
 		// Check if next square is out of board
-		if (line + dLine >= BOARD_SIZE || column + dColumn >= BOARD_SIZE
-				|| line + dLine < 0 || column + dColumn < 0) {
+		if (line + dLine >= BOARD_SIZE || column + dColumn >= BOARD_SIZE || line + dLine < 0 || column + dColumn < 0) {
 			return false;
 		}
 
@@ -370,9 +350,7 @@ public class GameBoard {
 		}
 
 		if (idPlayerAtPos != playerID) {
-
-			return checkDirection(line + dLine, column + dColumn, playerID,
-					dLine, dColumn, true);
+			return checkDirection(line + dLine, column + dColumn, playerID, dLine, dColumn, true);
 		} else if (ennemyFound) {
 			return true;
 		}
