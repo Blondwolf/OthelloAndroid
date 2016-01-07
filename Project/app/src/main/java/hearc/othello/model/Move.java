@@ -7,18 +7,24 @@ package hearc.othello.model ;
 public class Move
 {
 	// Attributs de la classe ;
-	public int i,j ;
+	private int line;
+	private int column;
 
 	// Constructeurs de la Classe ;
 	public Move () {}
-	public Move (int i, int j)
-	{ this.i = i ; this.j = j ; }
+	public Move (int line, int column)
+	{ this.line = line ; this.column = column ; }
 
-	public int getI(){
-		return i;
+	public int getLine(){
+		return line;
 	}
 
-	public int getJ(){
-		return j;
+	public int getColumn(){
+		return column;
+	}
+
+	@Override
+	public String toString() {
+		return getLine()+"/"+getColumn();
 	}
 }

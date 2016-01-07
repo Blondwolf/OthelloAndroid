@@ -73,7 +73,7 @@ public class GameBoard {
 	 */
 	public void setCoin(Move m, int playerID) {
 		if (m != null) {
-			gameBoard[m.j][m.i] = playerID;
+			gameBoard[m.getLine()][m.getColumn()] = playerID;
 		}
 	}
 
@@ -85,9 +85,8 @@ public class GameBoard {
 	 */
 	public void addCoin(Move m, int playerID) {
 		if (m != null) {
-			gameBoard[m.j][m.i] = playerID;
+			gameBoard[m.getLine()][m.getColumn()] = playerID;
 			reverseCoins(m, playerID);
-
 		}
 	}
 
@@ -197,7 +196,7 @@ public class GameBoard {
 		for (int line = 0; line < BOARD_SIZE; line++) {
 			for (int column = 0; column < BOARD_SIZE; column++) {
 				if (isMovePossible(line, column, playerID))
-					possibleMoves.add(new Move(column, line));
+					possibleMoves.add(new Move(line, column));
 			}
 		}
 
@@ -226,8 +225,8 @@ public class GameBoard {
 	private void reverseCoins(Move move, int currentID) {
 		reverseList.clear();
 
-		int line = move.j;
-		int column = move.i;
+		int line = move.getLine();
+		int column = move.getColumn();
 
 		// Checking the entire board if coins have to be reverted (are added to
 		// revertList)
@@ -241,10 +240,11 @@ public class GameBoard {
 		testDirection(line, column, currentID, 1, 1, false);
 
 		// Reverting the coins
+		//Check line/column
 		for (Move m : reverseList) {
-			int c = gameBoard[m.j][m.i];
+			int c = gameBoard[m.getLine()][m.getColumn()];
 			if (c != currentID) {
-				gameBoard[m.j][m.i] = currentID;
+				gameBoard[m.getLine()][m.getColumn()] = currentID;
 			}
 		}
 
@@ -305,7 +305,7 @@ public class GameBoard {
 		if (idPlayerAtPos != currentID) {
 
 			// Add position to temp reverseList
-			tempReverseList.add(new Move(column + dColumn, line + dLine));
+			tempReverseList.add(new Move(line + dLine, column + dColumn));
 			return reverseDirection(line + dLine, column + dColumn, currentID,
 					dLine, dColumn, true);
 		} else if (ennemyFound) {
