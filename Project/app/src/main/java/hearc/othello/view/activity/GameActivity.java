@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import hearc.othello.R;
 import hearc.othello.model.AI.PlayerAI;
+import hearc.othello.model.Game;
 import hearc.othello.model.GameBoard;
 import hearc.othello.model.Move;
 import hearc.othello.model.Player;
@@ -26,15 +27,12 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
     private TextView textScore;
 
     /*      Static text elements    */
+    //TODO : in strings file
     private static final String timeText = "Time : ";
-    private static final String scoreText = " score ";
+    private static final String scoreText = " - ";
 
     /*      Logical elements        */
-    private GameBoard gameboard;
-    private Player p1;
-    private Player p2;
-    private Player actualPlayer;
-    private Player enemyPlayer;
+    private Game game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +58,22 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
 
 
     public void initGame(){
+        //Get init Infos from previous activity
         int mode = getIntent().getIntExtra("Type", -1);
         String nameP1 = getIntent().getStringExtra("NameP1");
         String nameP2 = getIntent().getStringExtra("NameP2");
-        actualPlayer = p1 = new PlayerHuman(0, nameP1);
-        if(mode == R.id.vsIA)
-            enemyPlayer = p2 = new PlayerAI(1, 2);
-        else
-            enemyPlayer = p2 = new PlayerHuman(1, nameP2);
 
-        gameboard = new GameBoard();
+        //Init logical objects
+        Player p1 = new PlayerHuman(0, nameP1);
+        Player p2;
+        if(mode == R.id.vsIA) {
+            int IALevel = getIntent().getIntExtra("IA_level2", -1);
+            p2 = new PlayerAI(1, IALevel);
+        }
+        else
+            p2 = new PlayerHuman(1, nameP2);
+
+        game = new Game(mode, p1, p2);
     }
 
 
@@ -83,36 +87,8 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         ImageView cell = (ImageView) v;
         Move nextMove = getMoveFromCase(cell);
 
-        //Check if move is possible
-        if(gameboard.isMovePossible(nextMove.getLine(), nextMove.getColumn(), actualPlayer.getID())) {
-            AndroidTools.Toast(getApplicationContext(), actualPlayer.toString());
-
-            //Play move
-            gameboard.addCoin(nextMove, actualPlayer.getID());
-
-            //Check if IA for automatical move
-            if(enemyPlayer instanceof PlayerAI){//Check mode instead
-                updateGraphic();
-                //TODO : Little timer to simulate IA thinking
-
-                //Automatical play from IA
-                Move nextEnemyMove = enemyPlayer.nextPlay(gameboard);
-                gameboard.addCoin(nextEnemyMove, enemyPlayer.getID());
-            }
-            //Else is HumanPlayer
-            else{
-                //Changing player turn
-                Player tempPlayer = actualPlayer;
-                actualPlayer = enemyPlayer;
-                enemyPlayer = tempPlayer;
-            }
-
-            //Update graphic and score
-            updateGraphic();
-        }
-        else{
-            AndroidTools.Toast(getApplicationContext(), "Move : "+nextMove.toString()+" is not possible !");
-        }
+        //Play the move in the game
+        game.playMove(this, nextMove);
     }
 
     /***
@@ -163,7 +139,7 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
 
         for (int i = 0; i < GameBoard.BOARD_SIZE; i++) {
             for (int j = 0; j < GameBoard.BOARD_SIZE; j++) {
-                int cellValue = gameboard.getPlayerIDAtPos(i, j);
+                int cellValue = game.getGameBoard().getPlayerIDAtPos(i, j);
 
                 if (GameBoard.NO_COIN != cellValue) {
                     imgView = getCaseView(i, j);
@@ -179,10 +155,10 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void updateScore(){
-        int scoreP1 = gameboard.getCoinCount(p1.getID());
-        int scoreP2 = gameboard.getCoinCount(p2.getID());
+        Player p1 = game.getPlayer(Game.PLAYER1);
+        Player p2 = game.getPlayer(Game.PLAYER2);
 
-        String text = "<b>"+p1.getName() + "</b> " + scoreP1 + scoreText + scoreP2 + " <b>" + p2.getName() + "</b>";
+        String text = "<b>"+p1.getName() + "</b> " + p1.getScore() + scoreText + p2.getScore() + " <b>" + p2.getName() + "</b>";
         Spanned htmlText = Html.fromHtml(text);
 
         textScore.setText(htmlText);

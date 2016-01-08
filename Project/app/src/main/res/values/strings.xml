@@ -2,6 +2,7 @@
     <string name="app_name">Othello</string>
     <string name="action_settings">Settings</string>
     <string name="titre">Comment jouer?</string>
+
     <string name="texte1">Othello se joue sur un damier 8X8 voici la configuartion initiale:</string>
     <string name="texte2">Les coups admissibles pour un joueur sont ceux qui permettent de prendre en sandwich une ou
 plusieurs séries (ligne, colonne ou diagonale) d au moins un pion de la couleur adverse. Tous les
@@ -11,5 +12,13 @@ configuration suivante, Blanc peut jouer en b3, b4, b5, b6, e6 et f5: </string>
     <string name="texte4">Quand un joueur ne peut pas jouer, il passe son tour. Le jeu se termine quand plus aucun des deux
 joueurs ne peut poser de pion, le gagnant est alors le joueur qui a le plus de pions de sa couleur sur le
 damier (les eventuelles cases vides comptant pour le gagnant).</string>
+
+    <string name="IA_prompt">Choose an IA level</string>
+    <string-array name="IA_levels">
+        <item>Easy</item>
+        <item>Normal</item>
+        <item>Hard</item>
+        <item>Expert</item>
+    </string-array>
 
 </resources>

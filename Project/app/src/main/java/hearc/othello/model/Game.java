@@ -10,11 +10,16 @@ import hearc.othello.view.activity.GameActivity;
  * Created by Kevin on 08.01.2016.
  */
 public class Game {
+    public static final int PLAYER1 = 0;
+    public static final int PLAYER2 = 1;
+
     int mode;
 
     GameBoard gameboard;
     Player p1, p2;
     Player actualPlayer, enemyPlayer;
+
+    /*      Constructors    */
 
     //New Game
     public Game(int mode, Player p1, Player p2){
@@ -32,20 +37,33 @@ public class Game {
         this.mode = mode;
         actualPlayer = this.p1 = p1;
         enemyPlayer = this.p2 = p2;
+        updatePlayersScore();
+    }
+
+    /*      Public    */
+
+    public GameBoard getGameBoard(){
+        return gameboard;
+    }
+
+    public Player getPlayer(int ID){
+        return (p1.getID() == ID) ? p1 : p2;
     }
 
     public void playMove(GameActivity gameActivity, Move nextMove){
         //Check if move is possible
         if(gameboard.isMovePossible(nextMove.getLine(), nextMove.getColumn(), actualPlayer.getID())) {
-            AndroidTools.Toast(gameActivity.getApplicationContext(), actualPlayer.toString());
+            //AndroidTools.Toast(gameActivity.getApplicationContext(), actualPlayer.toString());
 
             //Play move
             gameboard.addCoin(nextMove, actualPlayer.getID());
 
             //Check if IA for automatical move
             if(enemyPlayer instanceof PlayerAI){//Check mode instead
-                gameActivity.updateGraphic();
                 //TODO : Little timer to simulate IA thinking
+
+                //In cas IA is low, show the movement first
+                update(gameActivity);
 
                 //Automatical play from IA
                 Move nextEnemyMove = enemyPlayer.nextPlay(gameboard);
@@ -57,13 +75,25 @@ public class Game {
                 Player tempPlayer = actualPlayer;
                 actualPlayer = enemyPlayer;
                 enemyPlayer = tempPlayer;
-            }
 
-            //Update graphic and score
-            gameActivity.updateGraphic();
+                //TODO : check if nextPlayer have possibleMov
+            }
         }
         else{
             AndroidTools.Toast(gameActivity.getApplicationContext(), "Move : "+nextMove.toString()+" is not possible !");
         }
+
+        update(gameActivity);
+    }
+
+    /*      Private    */
+    private void update(GameActivity gameActivity){
+        gameActivity.updateGraphic();
+        updatePlayersScore();
+    }
+
+    private void updatePlayersScore(){
+        p1.setScore(gameboard.getCoinCount(p1.getID()));
+        p2.setScore(gameboard.getCoinCount(p2.getID()));
     }
 }

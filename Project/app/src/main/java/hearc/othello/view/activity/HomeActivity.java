@@ -9,9 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import hearc.othello.R;
 import hearc.othello.tools.AndroidTools;
+import hearc.othello.view.dialog.AIDialog;
 import hearc.othello.view.dialog.DialogListener;
 import hearc.othello.view.dialog.LocalDialog;
 import hearc.othello.view.dialog.MainDialog;
@@ -20,10 +22,8 @@ import hearc.othello.view.dialog.NewOrLoadDialog;
 public class HomeActivity extends AppCompatActivity implements Button.OnClickListener, DialogListener{
 
     /*         Creation        */
-    /*private Mode mode;
-    public enum Mode{
-        VS, IA, WIFI
-    }*/
+    private String namePlayer1;
+    private String namePlayer2;
     private int mode;
 
     @Override
@@ -81,20 +81,24 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
 
     @Override
     public void onDialogResult(MainDialog caller, Bundle result) {
+        Intent intent;
+
         //Identify dialog
         switch (caller.getTitle()){
             case "New or load?":
                 int buttonId = result.getInt("newOrLoad");
                 switch (buttonId){
                     case R.id.newGame:
+                        Dialog dialog;
                         switch (mode){
                             case R.id.vsLocal:
-                                Dialog dialog = new LocalDialog(this, this);
+                                dialog = new LocalDialog(this, this);
                                 dialog.show();
                                 break;
                             case R.id.vsIA:
-                                //Dialog dialog = new IADialog(this);
-                                launchIAGame();
+                                dialog = new AIDialog(this, this);
+                                dialog.show();
+                                //launchIAGame();
                                 break;
                         }
 
@@ -109,28 +113,34 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
 
             case "Partie locale":
                 //Get back infos
-                String p1 = result.getString("player1");
-                String p2 = result.getString("player2");
-                launchLocalGame(p1, p2);
+                intent = initGameIntent();
+                intent.putExtra("NameP1", result.getString("player1"));//Doble-bundle?
+                intent.putExtra("NameP2", result.getString("player2"));
+                launchLocalGame(intent);
+                break;
+
+            case "Configurer l'IA":
+                intent = initGameIntent();
+                intent.putExtra("IA_level2", result.getInt("IA_level"));
+                launchIAGame(intent);
                 break;
         }
     }
 
     /*         Privates Functions       */
-    private void launchGameActivity(String namePlayer1, String namePlayer2, int mode){
-        Intent intent;
-        intent = new Intent(HomeActivity.this, GameActivity.class);
+    private Intent initGameIntent(){
+        return new Intent(HomeActivity.this, GameActivity.class);
+    }
+
+    public void launchIAGame(Intent intent){
         intent.putExtra("Type", mode);//TODO : dans strings
-        intent.putExtra("NameP1", namePlayer1);
-        intent.putExtra("NameP2", namePlayer2);
+        intent.putExtra("NameP1", "Player");
+        intent.putExtra("NameP2", "IA");
         startActivity(intent);
     }
 
-    public void launchIAGame(){
-        launchGameActivity("Player", "IA", R.id.vsIA);
-    }
-
-    public void launchLocalGame(String namePlayer1, String namePlayer2){
-        launchGameActivity(namePlayer1, namePlayer2, R.id.vsLocal);
+    public void launchLocalGame(Intent intent){
+        intent.putExtra("Type", mode);//TODO : dans strings
+        startActivity(intent);
     }
 }
