@@ -47,6 +47,19 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         textScore = (TextView) findViewById(R.id.score);
 
         //Initiate the game
+        initGame();
+
+        //Update the graphical gameboard
+        updateGraphic();
+
+        //TODO : launch thread for time
+        /*CustomTimerTask myTask = new CustomTimerTask();
+        Timer myTimer = new Timer();
+        myTimer.schedule(myTask, 3000, 1500);*/
+    }
+
+
+    public void initGame(){
         int mode = getIntent().getIntExtra("Type", -1);
         String nameP1 = getIntent().getStringExtra("NameP1");
         String nameP2 = getIntent().getStringExtra("NameP2");
@@ -57,13 +70,8 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
             enemyPlayer = p2 = new PlayerHuman(1, nameP2);
 
         gameboard = new GameBoard();
-        updateGraphic();
-
-        //TODO : launch thread for time
-        /*CustomTimerTask myTask = new CustomTimerTask();
-        Timer myTimer = new Timer();
-        myTimer.schedule(myTask, 3000, 1500);*/
     }
+
 
     /***
      * OnClick for the gameBoard's cells
@@ -145,7 +153,7 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         return imgView;
     }
 
-    private void updateGraphic(){
+    public void updateGraphic(){
         updateGraphicalBoard();
         updateScore();
     }
