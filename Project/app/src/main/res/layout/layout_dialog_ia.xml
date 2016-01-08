@@ -1,33 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_margin="20dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout
+        android:id="@+id/layout_names"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <Spinner
+        android:id="@+id/spinner_IA_level"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/IA_prompt"
+        android:entries="@array/IA_levels">
+
+    </Spinner>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_names">
 
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <Button
+            android:id="@+id/cancel"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="170dp">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel" />
 
-            <Button
-                android:layout_width="190dp"
-                android:layout_height="107dp"
-                android:text=""
-                android:id="@+id/newGame"
-                android:layout_gravity="center_vertical" />
-
-            <Button
-                android:layout_width="190dp"
-                android:layout_height="107dp"
-                android:text="loadGame"
-                android:id="@+id/load"
-                android:layout_gravity="center_vertical" />
-        </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+        <Button
+            android:id="@+id/apply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Choose" />
+    </LinearLayout>
+</RelativeLayout>

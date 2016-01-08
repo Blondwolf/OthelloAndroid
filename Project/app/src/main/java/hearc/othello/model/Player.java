@@ -8,8 +8,8 @@ package  hearc.othello.model;
 public abstract class Player
 {
 	protected int id;
-	protected GameBoard gameBoard;
 	protected String namePlayer;
+	protected int score;
 
 	public Player(int id, String namePlayer)
 	{
@@ -23,6 +23,14 @@ public abstract class Player
 
 	public String getName() {
 		return namePlayer;
+	}
+
+	public int getScore(){
+		return score;
+	}
+
+	public void setScore(int newScore){
+		score = newScore;
 	}
 
 	@Override
