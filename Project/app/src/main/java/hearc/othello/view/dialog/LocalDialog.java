@@ -15,6 +15,7 @@ import hearc.othello.view.activity.HomeActivity;
  */
 public class LocalDialog extends MainDialog implements View.OnClickListener{
 
+    boolean first;
     EditText editNamePlayer1, editNamePlayer2;
     ImageView imgCoinPlayer1, imgCoinPlayer2;
     Button btnCancel, btnApply;
@@ -38,6 +39,8 @@ public class LocalDialog extends MainDialog implements View.OnClickListener{
         imgCoinPlayer2.setOnClickListener(this);
         btnApply.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
+
+        first = false;//just for player switching
     }
 
     @Override
@@ -46,34 +49,34 @@ public class LocalDialog extends MainDialog implements View.OnClickListener{
             case R.id.img_player1 ://No break
             case R.id.img_player2 :
                 switchImage(imgCoinPlayer1, imgCoinPlayer2);
+                break;
             case R.id.apply:
                 Bundle bundle = new Bundle();
                 bundle.putString("player1", editNamePlayer1.getText().toString());
                 bundle.putString("player2", editNamePlayer2.getText().toString());
                 callListener(bundle);
-                //((HomeActivity) getOwnerActivity()).launchLocalGame(editNamePlayer1.getText().toString(), editNamePlayer2.getText().toString());
-                break;
             case R.id.cancel:
+                dismiss();
                 break;
         }
-        dismiss();
     }
 
     private void switchImage(ImageView img1, ImageView img2) {
-        int resId = (Integer) img1.getTag();
-
-        if(resId == 0)
-            return;
-
-        switch (resId){
-            case R.drawable.circle_blue:
-                img1.setImageResource(R.drawable.circle_red);
-                img2.setImageResource(R.drawable.circle_blue);
-                break;
-            case R.drawable.circle_red:
-                img1.setImageResource(R.drawable.circle_blue);
-                img2.setImageResource(R.drawable.circle_red);
-                break;
+        //Switch image
+        if(first) {
+            img1.setImageResource(R.drawable.circle_red);
+            img2.setImageResource(R.drawable.circle_blue);
         }
+        else {
+            img1.setImageResource(R.drawable.circle_blue);
+            img2.setImageResource(R.drawable.circle_red);
+        }
+
+        //Switch the editText to match assignation in the sending
+        EditText temp = editNamePlayer1;
+        editNamePlayer1 = editNamePlayer2;
+        editNamePlayer2 = temp;
+
+        first = !first;//Switch
     }
 }

@@ -33,11 +33,17 @@ public class NewOrLoadDialog extends MainDialog implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        //Send button id back to activity
-        Bundle bundle = new Bundle();
-        bundle.putInt("newOrLoad", v.getId());
+        if(v.getId() == R.id.cancel) {
+            dismiss();
+        }
+        else{
+            //Send button id back to activity
+            Bundle bundle = new Bundle();
+            bundle.putInt("newOrLoad", v.getId());
 
-        dismiss();
-        callListener(bundle);
+            dismiss();
+            callListener(bundle);
+        }
+
     }
 }

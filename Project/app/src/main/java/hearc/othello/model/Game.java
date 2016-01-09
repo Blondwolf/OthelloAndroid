@@ -62,7 +62,7 @@ public class Game {
             if(enemyPlayer instanceof PlayerAI){//Check mode instead
                 //TODO : Little timer to simulate IA thinking
 
-                //In cas IA is low, show the movement first
+                //In case IA is low, show the movement first
                 update(gameActivity);
 
                 //Automatical play from IA
@@ -88,8 +88,8 @@ public class Game {
 
     /*      Private    */
     private void update(GameActivity gameActivity){
-        gameActivity.updateGraphic();
         updatePlayersScore();
+        gameActivity.updateGraphic();
     }
 
     private void updatePlayersScore(){
