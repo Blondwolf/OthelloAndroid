@@ -34,13 +34,18 @@ public class AIDialog extends MainDialog implements View.OnClickListener { //, S
 
     @Override
     public void onClick(View v) {
-        //Send button id back to activity
-        int valueIA = spinner.getSelectedItemPosition();
+        if(v.getId() == R.id.apply) {
+            //Send button id back to activity
+            int valueIA = spinner.getSelectedItemPosition();
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("IA_level", (valueIA+1)*2);
+            Bundle bundle = new Bundle();
+            bundle.putInt("IA_level", (valueIA + 2));
 
-        dismiss();
-        callListener(bundle);
+            dismiss();
+            callListener(bundle);
+        }
+        else if(v.getId() == R.id.cancel) {
+            dismiss();
+        }
     }
 }
