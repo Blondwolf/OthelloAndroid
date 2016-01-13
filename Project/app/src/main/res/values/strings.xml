@@ -1,18 +1,13 @@
 <resources>
     <string name="app_name">Othello</string>
     <string name="action_settings">Settings</string>
-    <string name="titre">Comment jouer?</string>
+    <string name="titre">How to play?</string>
 
-    <string name="texte1">Othello se joue sur un damier 8X8 voici la configuartion initiale:</string>
-    <string name="texte2">Les coups admissibles pour un joueur sont ceux qui permettent de prendre en sandwich une ou
-plusieurs séries (ligne, colonne ou diagonale) d au moins un pion de la couleur adverse. Tous les
-pions ainsi pris en sandwich sont retournes et changent donc de couleur. Par exemple, a partir de la
-configuration suivante, Blanc peut jouer en b3, b4, b5, b6, e6 et f5: </string>
-    <string name="texte3">Jouer en b5 donne la position suivante:</string>
-    <string name="texte4">Quand un joueur ne peut pas jouer, il passe son tour. Le jeu se termine quand plus aucun des deux
-joueurs ne peut poser de pion, le gagnant est alors le joueur qui a le plus de pions de sa couleur sur le
-damier (les eventuelles cases vides comptant pour le gagnant).</string>
-
+    <string name="texte1">Othello is played on an 8 x 8 board with 64 discs, black on 1 side and white on the other</string>
+    <string name="texte2">Place 4 discs in the center of the board, 2 with the black side up and 2 with the white side up. </string>
+    <string name="texte3">lack places a disc so that it and 1 of his starting discs flank a white disc (i.e. a white disc will be between
+        two black discs).</string>
+    <string name="texte4">Black flips the (flanked) white disc over so it is now black, and belongs to the Black player.</string>
     <string name="IA_prompt">Choose an IA level</string>
     <string-array name="IA_levels">
         <item>Easy</item>
