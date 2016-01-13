@@ -7,12 +7,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import hearc.othello.R;
-import hearc.othello.tools.AndroidTools;
 
 /**
  * Created by Kevin on 13.11.2015.
  */
-public class AIDialog extends MainDialog implements View.OnClickListener { //, Spinner.OnItemSelectedListener
+public class AIDialog extends MainDialog implements View.OnClickListener {
 
     Spinner spinner;
     Button cancel;

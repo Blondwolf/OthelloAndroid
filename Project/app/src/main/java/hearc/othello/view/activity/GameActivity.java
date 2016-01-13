@@ -1,5 +1,6 @@
 package hearc.othello.view.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -13,6 +14,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.File;
+
 import hearc.othello.R;
 import hearc.othello.model.AI.PlayerAI;
 import hearc.othello.model.Game;
@@ -20,7 +23,7 @@ import hearc.othello.model.GameBoard;
 import hearc.othello.model.Move;
 import hearc.othello.model.Player;
 import hearc.othello.model.PlayerHuman;
-import hearc.othello.tools.AndroidTools;
+import hearc.othello.tools.Tools;
 
 public class GameActivity extends AppCompatActivity implements Button.OnClickListener {
     /*      Graphical elements      */
@@ -78,7 +81,6 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         game = new Game(mode, p1, p2);
     }
 
-
     /***
      * OnClick for the gameBoard's cells
      * @param v : View from the cell where the player want to add a piece
@@ -96,7 +98,7 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.menu_game, menu);
         return true;
     }
 
@@ -105,7 +107,10 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.save_game) {
+            File file = new File(getFilesDir(), "game");
+            Tools.writeSerializableInFile(game, file);
+            //SharedPreferences prefs = getSharedPreferences("othello", MODE_PRIVATE);
             return true;
         }
 

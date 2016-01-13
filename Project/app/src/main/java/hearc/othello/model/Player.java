@@ -1,11 +1,13 @@
 package  hearc.othello.model;
 
+import java.io.Serializable;
+
 /**
  * Contains the player indications
  *
  * @author Ellenberger Patrick and Moll Adrian edited by Vulliemin Kevin and Ajjali Wassim
  */
-public abstract class Player
+public abstract class Player implements Serializable
 {
 	protected int id;
 	protected String namePlayer;

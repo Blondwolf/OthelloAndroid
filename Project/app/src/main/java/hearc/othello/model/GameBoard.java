@@ -1,5 +1,6 @@
 package hearc.othello.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * 
  * @author Ellenberger Patrick and Moll Adrian edited by Vulliemin Kevin and Ajjali Wassim
  */
-public class GameBoard {
+public class GameBoard implements Serializable {
 
 	public static final int RED_COIN = 0;
 	public static final int BLUE_COIN = 1;

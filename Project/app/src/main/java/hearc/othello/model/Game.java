@@ -1,15 +1,15 @@
 package hearc.othello.model;
 
-import android.content.Context;
+import java.io.Serializable;
 
 import hearc.othello.model.AI.PlayerAI;
-import hearc.othello.tools.AndroidTools;
+import hearc.othello.tools.Tools;
 import hearc.othello.view.activity.GameActivity;
 
 /**
  * Created by Kevin on 08.01.2016.
  */
-public class Game {
+public class Game implements Serializable{
     public static final int PLAYER1 = 0;
     public static final int PLAYER2 = 1;
 
@@ -80,7 +80,7 @@ public class Game {
             }
         }
         else{
-            AndroidTools.Toast(gameActivity.getApplicationContext(), "Move : "+nextMove.toString()+" is not possible !");
+            Tools.Toast(gameActivity.getApplicationContext(), "Move : " + nextMove.toString() + " is not possible !");
         }
 
         update(gameActivity);

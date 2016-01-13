@@ -1,29 +1,26 @@
 package hearc.othello.view.activity;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
+import java.io.File;
 
 import hearc.othello.R;
-import hearc.othello.tools.AndroidTools;
+import hearc.othello.tools.Tools;
 import hearc.othello.view.dialog.AIDialog;
 import hearc.othello.view.dialog.DialogListener;
 import hearc.othello.view.dialog.LocalDialog;
 import hearc.othello.view.dialog.MainDialog;
+import hearc.othello.view.dialog.NetworkDialog;
 import hearc.othello.view.dialog.NewOrLoadDialog;
 
 public class HomeActivity extends AppCompatActivity implements Button.OnClickListener, DialogListener{
 
     /*         Creation        */
-    private String namePlayer1;
-    private String namePlayer2;
     private int mode;
 
     @Override
@@ -50,13 +47,13 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
                 dialog.show();
                 break;
             case R.id.vsWifi:
-                AndroidTools.Toast(this, "Partie en Wifi");
+                dialog = new NetworkDialog(this, this);
+                dialog.show();
                 break;
             case R.id.instruction:
                 intent = new Intent(HomeActivity.this, InstructionActivity.class);
                 startActivity(intent);
                 break;
-
         }
     }
 
@@ -79,12 +76,11 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
                             case R.id.vsIA:
                                 dialog = new AIDialog(this, this);
                                 dialog.show();
-                                //launchIAGame();
                                 break;
                         }
-
                         break;
                     case R.id.loadGame:
+                        //Tools.readSerializable(file);
                         //TODO : Load preferences
                         break;
                     default:
