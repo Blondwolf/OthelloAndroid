@@ -17,18 +17,20 @@ public class NewOrLoadDialog extends MainDialog implements View.OnClickListener 
     public static final int NEW = 0;
     public static final int LOAD = 1;
 
-    Button newGame, loadGame;
-
     public NewOrLoadDialog(Context context, DialogListener listener) {
         super(context, listener, R.layout.layout_dialog_new_load, "New or load?");
     }
 
     @Override
     protected void initGraphicElement() {
+        Button newGame, loadGame, cancel;
+
         newGame = (Button) findViewById(R.id.newGame);
         newGame.setOnClickListener(this);
         loadGame = (Button) findViewById(R.id.loadGame);
         loadGame.setOnClickListener(this);
+        cancel = (Button) findViewById(R.id.cancel);
+        cancel.setOnClickListener(this);
     }
 
     @Override
