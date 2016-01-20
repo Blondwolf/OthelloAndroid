@@ -13,6 +13,12 @@ public class Game implements Serializable{
     public static final int PLAYER1 = 0;
     public static final int PLAYER2 = 1;
 
+    public static final int DEFAULT = 1;
+    public static final int NO_MOVE = 2;
+    public static final int IMPOSSIBLE_MOVE = 3;
+    public static final int END_GAME = 4;
+
+    int state;
     int mode;
 
     GameBoard gameboard;
@@ -34,9 +40,17 @@ public class Game implements Serializable{
     }
 
     private void initGame(int mode, Player p1, Player p2){
+        this.state = DEFAULT;
         this.mode = mode;
+
         actualPlayer = this.p1 = p1;
         enemyPlayer = this.p2 = p2;
+
+        if(actualPlayer instanceof PlayerAI){
+            Move nextEnemyMove = enemyPlayer.nextPlay(gameboard);
+            playMove(nextEnemyMove);
+        }
+
         updatePlayersScore();
     }
 
@@ -50,50 +64,76 @@ public class Game implements Serializable{
         return (p1.getID() == ID) ? p1 : p2;
     }
 
-    public void playMove(GameActivity gameActivity, Move nextMove){
-        //Check if move is possible
-        if(gameboard.isMovePossible(nextMove.getLine(), nextMove.getColumn(), actualPlayer.getID())) {
-            //AndroidTools.Toast(gameActivity.getApplicationContext(), actualPlayer.toString());
+    public Player getActualPlayer(){
+        return actualPlayer;
+    }
 
-            //Play move
+    public Player getEnemyPlayer(){
+        return enemyPlayer;
+    }
+
+    public boolean isActualPlayer(Player player){
+        return actualPlayer == player;
+    }
+
+    public boolean isFinished(){
+        return state == END_GAME;
+    }
+
+    public void playMove(Move nextMove){
+        //Possible move algo
+        if(gameboard.isMovePossible(nextMove.getLine(), nextMove.getColumn(), actualPlayer.getID())) {
+             //Play move
             gameboard.addCoin(nextMove, actualPlayer.getID());
 
-            //Check if IA for automatical move
-            if(enemyPlayer instanceof PlayerAI){//Check mode instead
-                //TODO : Little timer to simulate IA thinking
-
-                //In case IA is low, show the movement first
-                update(gameActivity);
-
-                //Automatical play from IA
-                Move nextEnemyMove = enemyPlayer.nextPlay(gameboard);
-                gameboard.addCoin(nextEnemyMove, enemyPlayer.getID());
+            //Check if move is possible
+            //No moves for enemy
+            if(gameboard.getPossibleMoves(enemyPlayer.getID()).isEmpty()) {
+                if (gameboard.getPossibleMoves(actualPlayer.getID()).isEmpty())
+                    state = END_GAME;
+                else
+                    state = NO_MOVE;
             }
-            //Else is HumanPlayer
+            //enemy moves are possible
             else{
                 //Changing player turn
                 Player tempPlayer = actualPlayer;
                 actualPlayer = enemyPlayer;
                 enemyPlayer = tempPlayer;
 
-                //TODO : check if nextPlayer have possibleMov
+                //Check if IA for automatical move
+                if(actualPlayer instanceof PlayerAI){//Check mode instead
+                    //TODO : In case IA is low, show the movement first
+                    update();
+
+                    //Automatical play from IA
+                    Move nextEnemyMove = actualPlayer.nextPlay(gameboard);
+                    playMove(nextEnemyMove);
+                }
             }
         }
         else{
-            Tools.Toast(gameActivity.getApplicationContext(), "Move : " + nextMove.toString() + " is not possible !");
+            state = IMPOSSIBLE_MOVE;
         }
 
-        update(gameActivity);
+        update();
     }
 
     /*      Private    */
-    private void update(GameActivity gameActivity){
+    private void update(){
         updatePlayersScore();
-        gameActivity.updateGraphic();
     }
 
     private void updatePlayersScore(){
         p1.setScore(gameboard.getCoinCount(p1.getID()));
         p2.setScore(gameboard.getCoinCount(p2.getID()));
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public int getMode() {
+        return mode;
     }
 }

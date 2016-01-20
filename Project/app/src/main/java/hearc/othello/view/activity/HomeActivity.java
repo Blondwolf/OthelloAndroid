@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.Button;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import hearc.othello.R;
+import hearc.othello.model.Game;
 import hearc.othello.tools.Tools;
 import hearc.othello.view.dialog.AIDialog;
 import hearc.othello.view.dialog.DialogListener;
@@ -80,8 +83,18 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
                         }
                         break;
                     case R.id.loadGame:
-                        //Tools.readSerializable(file);
-                        //TODO : Load preferences
+                        //TODO : ~Choose save file
+                        //TODO : redirect with mode -> bad conception
+
+                        List<String> list = Arrays.asList(getFilesDir().list());
+                        if(list.contains("game_"+mode)) {
+                            intent = initGameIntent();
+                            intent.putExtra("load_file", "game_");
+                            launchGame(intent);
+                        }
+                        else{
+                            Tools.Toast(this, "No Game founded");
+                        }
                         break;
                     default:
                         //DISMISS
@@ -93,13 +106,15 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
                 intent = initGameIntent();
                 intent.putExtra("NameP1", result.getString("player1"));//Doble-bundle?
                 intent.putExtra("NameP2", result.getString("player2"));
-                launchLocalGame(intent);
+                launchGame(intent);
                 break;
 
             case "Configurer l'IA":
                 intent = initGameIntent();
                 intent.putExtra("IA_level2", result.getInt("IA_level"));
-                launchIAGame(intent);
+                intent.putExtra("NameP1", "Player");
+                intent.putExtra("NameP2", "IA");
+                launchGame(intent);
                 break;
         }
     }
@@ -109,15 +124,16 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
         return new Intent(HomeActivity.this, GameActivity.class);
     }
 
-    public void launchIAGame(Intent intent){
-        intent.putExtra("Type", mode);//TODO : dans strings
-        intent.putExtra("NameP1", "Player");
-        intent.putExtra("NameP2", "IA");
-        startActivity(intent);
-    }
-
-    public void launchLocalGame(Intent intent){
-        intent.putExtra("Type", mode);//TODO : dans strings
-        startActivity(intent);
+    public void launchGame(Intent intent){
+        switch (mode){
+            case R.id.vsLocal:
+                intent.putExtra("Type", mode);//TODO : dans strings
+                startActivity(intent);
+                break;
+            case R.id.vsIA:
+                intent.putExtra("Type", mode);//TODO : dans strings
+                startActivity(intent);
+                break;
+        }
     }
 }

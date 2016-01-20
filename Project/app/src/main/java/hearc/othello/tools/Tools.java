@@ -26,12 +26,10 @@ public class Tools {
         Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
-    public static void writeSerializableInFile(Serializable serializable, File file)
+    public static void writeSerializableInFile(Context context, Serializable serializable, File file)
     {
         try {
-            String fileName = file.toString();
-
-            FileOutputStream fos = new FileOutputStream(fileName);
+            FileOutputStream fos = new FileOutputStream(file, false);// true will be same as Context.MODE_APPEND
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             ObjectOutputStream oos = new ObjectOutputStream(bos);
 
@@ -40,6 +38,8 @@ public class Tools {
             oos.close();
             bos.close();
             fos.close();
+
+            Toast(context, "Game saved");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

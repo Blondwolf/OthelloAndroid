@@ -4,7 +4,9 @@ package hearc.othello.model ;
 //  Simplification des coups (i,j)
 // ****************************************************
 
-public class Move
+import java.io.Serializable;
+
+public class Move implements Serializable
 {
 	// Attributs de la classe ;
 	private int line;

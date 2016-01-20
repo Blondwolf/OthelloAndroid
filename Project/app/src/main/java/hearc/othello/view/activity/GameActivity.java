@@ -15,6 +15,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import hearc.othello.R;
 import hearc.othello.model.AI.PlayerAI;
@@ -50,10 +55,12 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         textScore = (TextView) findViewById(R.id.score);
 
         //Initiate the game
-        initGame();
-
-        //Update the graphical gameboard
-        updateGraphic();
+        if(!getIntent().hasExtra("load_file"))
+            initGame();
+        else{
+            String fileName = (String) getIntent().getExtras().get("load_file");
+            loadGame(fileName);
+        }
 
         //TODO : launch thread for time
         /*CustomTimerTask myTask = new CustomTimerTask();
@@ -61,6 +68,16 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         myTimer.schedule(myTask, 3000, 1500);*/
     }
 
+    private void loadGame(String fileName) {
+        int mode = getIntent().getIntExtra("Type", -1);
+
+        File file = new File(getFilesDir(), fileName + mode);
+        Game game = (Game) Tools.readSerializable(file);
+        this.game = game;
+
+        updateGraphic();
+
+    }
 
     public void initGame(){
         //Get init Infos from previous activity
@@ -79,6 +96,13 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
             p2 = new PlayerHuman(1, nameP2);
 
         game = new Game(mode, p1, p2);
+
+        updateGraphic();
+    }
+
+    public void endGame(){
+        //TODO : Dialog for new game
+        onBackPressed();
     }
 
     /***
@@ -92,7 +116,22 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         Move nextMove = getMoveFromCase(cell);
 
         //Play the move in the game
-        game.playMove(this, nextMove);
+        game.playMove(nextMove);
+
+        //Update graphics
+        updateGraphic();
+        switch (game.getState()){
+            case Game.NO_MOVE:
+                Tools.Toast(getApplicationContext(), "No possible move for player " + game.getActualPlayer().getName() + ",\nit's " + game.getEnemyPlayer().getName() + " turn");
+                break;
+            case Game.IMPOSSIBLE_MOVE:
+                Tools.Toast(getApplicationContext(), "Move : " + nextMove.toString() + " is not possible !");
+                break;
+            case Game.END_GAME:
+                Tools.Toast(getApplicationContext(), "Move : " + nextMove.toString() + " is not possible !");
+                endGame();
+                break;
+        }
     }
 
     @Override
@@ -108,8 +147,8 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_game) {
-            File file = new File(getFilesDir(), "game");
-            Tools.writeSerializableInFile(game, file);
+            File file = new File(getFilesDir(), "game_"+ game.getMode());
+            Tools.writeSerializableInFile(this, game, file);
             //SharedPreferences prefs = getSharedPreferences("othello", MODE_PRIVATE);
             return true;
         }
@@ -183,8 +222,15 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
     private void updateScore(){
         Player p1 = game.getPlayer(Game.PLAYER1);
         Player p2 = game.getPlayer(Game.PLAYER2);
+        String text;
 
-        String text = "<b>"+p1.getName() + "</b> " + p1.getScore() + scoreText + p2.getScore() + " <b>" + p2.getName() + "</b>";
+        if (game.isActualPlayer(p1)) {
+            text = "<b><u>"+p1.getName() + "</u></b> " + p1.getScore() + scoreText + p2.getScore() + " <b>" + p2.getName() + "</b>";
+        }
+        else{
+            text = "<b>"+p1.getName() + "</b> " + p1.getScore() + scoreText + p2.getScore() + " <b><u>" + p2.getName() + "</u></b>";
+        }
+
         Spanned htmlText = Html.fromHtml(text);
 
         textScore.setText(htmlText);
