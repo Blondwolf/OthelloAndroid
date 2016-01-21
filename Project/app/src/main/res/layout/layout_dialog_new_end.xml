@@ -17,13 +17,13 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="30dp"
-            android:text="Winner is N/A"/>
+            android:text="@string/labelWinner"/>
 
         <TextView
             android:id="@+id/text_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Do you wanna create a new game or load an old one?"/>
+            android:text="@string/newOrLoad"/>
 
     </LinearLayout>
 
@@ -39,13 +39,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Quit" />
+            android:text="@string/btnCanel" />
 
         <Button
             android:id="@+id/newGame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="New" />
+            android:text="@string/btnNew" />
     </LinearLayout>
 </RelativeLayout>

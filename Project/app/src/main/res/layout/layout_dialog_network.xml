@@ -23,14 +23,14 @@
             android:id="@+id/cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/btnCanel"
             android:layout_weight="1"
             />
         <Button
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Refresh"
+            android:text="@string/btnRefresh"
             android:layout_weight="1"
             />
     </LinearLayout>

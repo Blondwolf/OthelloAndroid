@@ -33,13 +33,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="@string/btnCanel" />
 
         <Button
             android:id="@+id/apply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Choose" />
+            android:text="@string/choisir" />
     </LinearLayout>
 </RelativeLayout>

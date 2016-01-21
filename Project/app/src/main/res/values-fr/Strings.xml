@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Othello</string>
+    <string name="action_settings">Reglages</string>
+
+
+    <string name="titre">Comment jouer?</string>
+    <string name="btnCanel">Quitter</string>
+    <string name="choisir">Choisir niveau</string>
+    <string name="btnRefresh">Rafraichir</string>
+    <string name="btnNew">Nouveau</string>
+    <string name="btnLoad">Charger</string>
+
+    <string name="newOrLoad">Voulez-vous creer une nouvelle partie ou charger une ancienne?</string>
+    <string name="labelWinner">Le vainqueur est </string>
+
+
+    <string name="texte1">Othello est joue sur un plateau de 8 x 8 avec 64 pieces , noir sur 1 cote et blanc de l autre</string>
+    <string name="texte2">Au debut du jeu chacun commence avec 2 pieces opposes l un à l autre. </string>
+    <string name="texte3">Les coups admissibles pour un joueur sont ceux qui permettent de prendre en sandwich une ou
+plusieurs series (ligne, colonne ou diagonale).</string>
+    <string name="texte4">Le gagnant est celui qui a le plus de piece à la fin du jeu </string>
+    <string name="IA_prompt">Choisir le niveau </string>
+    <string-array name="IA_levels">
+        <item>Facile</item>
+        <item>Normal</item>
+        <item>Difficile</item>
+        <item>Expert</item>
+    </string-array>
+
+</resources>
