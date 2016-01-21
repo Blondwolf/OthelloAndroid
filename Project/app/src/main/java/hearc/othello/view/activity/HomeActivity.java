@@ -37,21 +37,17 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
     @Override
     public void onClick(View v) {
         Intent intent;
-        Dialog dialog;
 
         mode = v.getId();
         switch (mode){
             case R.id.vsLocal:
-                dialog = new NewOrLoadDialog(this, this);
-                dialog.show();
+                new NewOrLoadDialog(this, this).show();
                 break;
             case R.id.vsIA:
-                dialog = new NewOrLoadDialog(this, this);
-                dialog.show();
+                new NewOrLoadDialog(this, this).show();
                 break;
             case R.id.vsWifi:
-                dialog = new NetworkDialog(this, this);
-                dialog.show();
+                new NetworkDialog(this, this).show();
                 break;
             case R.id.instruction:
                 intent = new Intent(HomeActivity.this, InstructionActivity.class);
@@ -70,15 +66,12 @@ public class HomeActivity extends AppCompatActivity implements Button.OnClickLis
                 int buttonId = result.getInt("newOrLoad");
                 switch (buttonId){
                     case R.id.newGame:
-                        Dialog dialog;
                         switch (mode){
                             case R.id.vsLocal:
-                                dialog = new LocalDialog(this, this);
-                                dialog.show();
+                                new LocalDialog(this, this).show();
                                 break;
                             case R.id.vsIA:
-                                dialog = new AIDialog(this, this);
-                                dialog.show();
+                                new AIDialog(this, this).show();
                                 break;
                         }
                         break;

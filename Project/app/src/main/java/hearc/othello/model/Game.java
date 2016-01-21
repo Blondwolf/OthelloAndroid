@@ -33,12 +33,6 @@ public class Game implements Serializable{
         initGame(mode, p1, p2);
     }
 
-    //Load Game
-    public Game(int mode, GameBoard gameboard, Player p1, Player p2){
-        this.gameboard = gameboard;
-        initGame(mode, p1, p2);
-    }
-
     private void initGame(int mode, Player p1, Player p2){
         this.state = DEFAULT;
         this.mode = mode;

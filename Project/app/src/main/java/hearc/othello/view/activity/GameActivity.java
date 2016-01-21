@@ -1,6 +1,12 @@
 package hearc.othello.view.activity;
 
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -15,11 +21,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import hearc.othello.R;
 import hearc.othello.model.AI.PlayerAI;
@@ -29,8 +30,11 @@ import hearc.othello.model.Move;
 import hearc.othello.model.Player;
 import hearc.othello.model.PlayerHuman;
 import hearc.othello.tools.Tools;
+import hearc.othello.view.dialog.DialogListener;
+import hearc.othello.view.dialog.MainDialog;
+import hearc.othello.view.dialog.NewOrEndDialog;
 
-public class GameActivity extends AppCompatActivity implements Button.OnClickListener {
+public class GameActivity extends AppCompatActivity implements Button.OnClickListener, SensorEventListener, DialogListener {
     /*      Graphical elements      */
     private TableLayout tableLayout;
     private TextView textTime;
@@ -44,15 +48,18 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
     /*      Logical elements        */
     private Game game;
 
+    /*      Sensors elements        */
+    private SensorManager sensorManager;
+    private float accel;        // acceleration apart from gravity
+    private float accelCurrent; // current acceleration including gravity
+    private float accelLast;    // last acceleration including gravity
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_game);
 
-        //Getting graphical elements
-        tableLayout = (TableLayout) findViewById(R.id.graphic_gameboard);
-        textTime = (TextView) findViewById(R.id.time);
-        textScore = (TextView) findViewById(R.id.score);
+        //Init Activity
+        initGameActivity();
 
         //Initiate the game
         if(!getIntent().hasExtra("load_file"))
@@ -66,6 +73,42 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         /*CustomTimerTask myTask = new CustomTimerTask();
         Timer myTimer = new Timer();
         myTimer.schedule(myTask, 3000, 1500);*/
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        sensorManager.unregisterListener(this);
+        super.onPause();
+    }
+
+    private void initGameActivity(){
+        setContentView(R.layout.layout_game);
+
+        //Getting graphical elements
+        tableLayout = (TableLayout) findViewById(R.id.graphic_gameboard);
+        textTime = (TextView) findViewById(R.id.time);
+        textScore = (TextView) findViewById(R.id.score);
+
+        //Init sensors
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        //sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        accel = 0.00f;
+        accelCurrent = SensorManager.GRAVITY_EARTH;
+        accelLast = SensorManager.GRAVITY_EARTH;
+    }
+
+    private void saveGame(boolean show){
+        File file = new File(getFilesDir(), "game_"+ game.getMode());
+        Tools.writeSerializableInFile(this, game, file);
+
+        if(show)
+            Tools.Toast(this, "Game saved");
     }
 
     private void loadGame(String fileName) {
@@ -98,11 +141,11 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         game = new Game(mode, p1, p2);
 
         updateGraphic();
+        saveGame(false);
     }
 
     public void endGame(){
-        //TODO : Dialog for new game
-        onBackPressed();
+        new NewOrEndDialog(this, this).show();
     }
 
     /***
@@ -135,6 +178,12 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        saveGame(false);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_game, menu);
@@ -147,9 +196,7 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_game) {
-            File file = new File(getFilesDir(), "game_"+ game.getMode());
-            Tools.writeSerializableInFile(this, game, file);
-            //SharedPreferences prefs = getSharedPreferences("othello", MODE_PRIVATE);
+            saveGame(true);
             return true;
         }
 
@@ -205,15 +252,18 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         for (int i = 0; i < GameBoard.BOARD_SIZE; i++) {
             for (int j = 0; j < GameBoard.BOARD_SIZE; j++) {
                 int cellValue = game.getGameBoard().getPlayerIDAtPos(i, j);
+                imgView = getCaseView(i, j);
 
                 if (GameBoard.NO_COIN != cellValue) {
-                    imgView = getCaseView(i, j);
                     if(GameBoard.BLUE_COIN == cellValue) {
                         imgView.setImageResource(R.drawable.circle_blue);
                     }
                     else if(GameBoard.RED_COIN == cellValue){
                         imgView.setImageResource(R.drawable.circle_red);
                     }
+                }
+                else{
+                    imgView.setImageDrawable(null);
                 }
             }
         }
@@ -234,5 +284,51 @@ public class GameActivity extends AppCompatActivity implements Button.OnClickLis
         Spanned htmlText = Html.fromHtml(text);
 
         textScore.setText(htmlText);
+    }
+
+    /*      Sensors     */
+    //http://stackoverflow.com/questions/2317428/android-i-want-to-shake-it
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float x = event.values[0];
+        float y = event.values[1];
+        float z = event.values[2];
+        accelLast = accelCurrent;
+        accelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
+        float delta = accelCurrent - accelLast;
+        accel = accel * 0.9f + delta; // perform low-cut filter
+
+        if(accel > 12f){
+            saveGame(true);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    public void onDialogResult(MainDialog caller, Bundle result) {
+        Intent intent;
+
+        switch (result.getInt("newOrEnd")){
+            case R.id.newGame:
+                game = new Game(game.getMode(), game.getPlayer(Game.PLAYER1), game.getPlayer(Game.PLAYER2));
+                updateGraphic();
+                saveGame(false);
+                break;
+            case R.id.quit:
+                intent = new Intent(GameActivity.this, HomeActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public Player getNameWinner() {
+        return game.getActualPlayer().getScore() > game.getEnemyPlayer().getScore() ? game.getActualPlayer() : game.getEnemyPlayer();
     }
 }

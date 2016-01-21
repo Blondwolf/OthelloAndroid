@@ -26,7 +26,6 @@ public abstract class MainDialog extends Dialog implements View.OnClickListener{
         this.title = title;
 
         initGraphicElement();
-        show();
     }
 
     protected abstract void initGraphicElement();

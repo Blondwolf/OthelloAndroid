@@ -38,8 +38,6 @@ public class Tools {
             oos.close();
             bos.close();
             fos.close();
-
-            Toast(context, "Game saved");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
